@@ -12,15 +12,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-/**
- * Pure transport responsibility: build the MimeMessage and send it.
- * HTML body construction is delegated to MailTemplateService (single responsibility,
- * per code review — never put HTML in the same class that sends the email).
- */
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "app.mail.impl", havingValue = "smtp")
+@ConditionalOnProperty(
+        name = "app.mail.impl",
+        havingValue = "smtp"
+)
 public class SmtpMailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
@@ -30,7 +28,6 @@ public class SmtpMailServiceImpl implements MailService {
     public boolean sendFeedbackInvite(User user, ModuleFormation module) {
 
         String subject = "Feedback requested: " + module.getTitle();
-
         String body = mailTemplateService.buildFeedbackInvite(user, module);
 
         return send(user.getEmail(), subject, body);
@@ -64,6 +61,8 @@ public class SmtpMailServiceImpl implements MailService {
             helper.setText(html, true);
 
             mailSender.send(message);
+
+            log.info("Email sent successfully to {}", to);
 
             return true;
 
