@@ -1,0 +1,36 @@
+<div class="fb-page">
+  <div class="fb-page-header">
+    <div><h1 class="fb-page-title">My Completed Modules</h1><p class="fb-page-subtitle">Share your feedback to help improve future training</p></div>
+  </div>
+  @if (loading) { <div class="fb-empty"><h3>Loading…</h3></div> }
+  @if (!loading && modules.length === 0) {
+    <div class="fb-empty"><div class="fb-empty-icon">🎓</div><h3>No modules yet</h3><p>Your completed modules from TalentUp will appear here once synced.</p></div>
+  }
+  @if (!loading && modules.length > 0) {
+    <div class="fb-table-wrap">
+      <table class="fb-table">
+        <thead><tr><th>Module</th><th>Category</th><th>Completed</th><th>Status</th><th class="text-right">Action</th></tr></thead>
+        <tbody>
+          @for (m of modules; track m.feedbackId) {
+            <tr>
+              <td class="fw-600">{{ m.moduleTitle }}</td>
+              <td class="text-muted">{{ m.moduleCategory || '—' }}</td>
+              <td class="text-muted">{{ m.completionDate | date:'dd/MM/yyyy' }}</td>
+              <td>
+                @if (m.status === 'SUBMITTED') { <span class="fb-badge fb-badge-submitted">✓ Submitted</span> }
+                @else { <span class="fb-badge fb-badge-pending">⏳ Pending</span> }
+              </td>
+              <td class="text-right">
+                @if (m.status !== 'SUBMITTED') {
+                  <a [routerLink]="['/feedback/submit']" [queryParams]="{moduleId: m.moduleId}" class="fb-btn fb-btn-primary fb-btn-sm">Give feedback</a>
+                } @else {
+                  <a [routerLink]="['/feedback', m.feedbackId]" class="fb-btn fb-btn-outline fb-btn-sm">View</a>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

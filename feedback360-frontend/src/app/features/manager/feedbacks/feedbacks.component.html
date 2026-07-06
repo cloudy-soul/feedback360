@@ -1,0 +1,45 @@
+<div class="fb-page">
+  <div class="fb-page-header">
+    <div><h1 class="fb-page-title">Feedback</h1><p class="fb-page-subtitle">Browse and filter submitted employee feedback</p></div>
+    <button class="fb-btn fb-btn-outline" (click)="exportCsv()"><i class="bi bi-download"></i> Export CSV</button>
+  </div>
+  <div class="fb-filter-bar">
+    <div class="fb-filter-group"><label>Module</label><input [(ngModel)]="module" class="fb-input" placeholder="Angular…"></div>
+    <div class="fb-filter-group"><label>Department</label><input [(ngModel)]="department" class="fb-input" placeholder="Dev…"></div>
+    <div class="fb-filter-group"><label>From</label><input type="date" [(ngModel)]="dateFrom" class="fb-input"></div>
+    <div class="fb-filter-group"><label>To</label><input type="date" [(ngModel)]="dateTo" class="fb-input"></div>
+    <div class="fb-filter-group"><label>Min ★</label><input type="number" [(ngModel)]="minRating" class="fb-input fb-field-xnarrow" min="0" max="10"></div>
+    <div class="fb-filter-group"><label>Status</label>
+      <select [(ngModel)]="status" class="fb-select">
+        <option value="">Any</option><option value="NOT_SUBMITTED">Pending</option><option value="SUBMITTED">Submitted</option>
+      </select>
+    </div>
+    <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> Filter</button>
+    <button class="fb-btn fb-btn-outline" (click)="clearFilter()">Clear</button>
+  </div>
+  <div class="fb-table-wrap">
+    <table class="fb-table">
+      <thead><tr><th>Module</th><th>Employee</th><th>Dept</th><th>Rating</th><th>Status</th><th>Submitted</th><th class="text-right">Actions</th></tr></thead>
+      <tbody>
+        @if (loading) { <tr><td colspan="7" class="text-muted" style="padding:24px;text-align:center">Loading…</td></tr> }
+        @if (!loading && page?.content?.length === 0) { <tr><td colspan="7"><div class="fb-empty"><div class="fb-empty-icon">📋</div><h3>No results</h3><p>Try adjusting the filters.</p></div></td></tr> }
+        @for (f of page?.content ?? []; track f.feedbackId) {
+          <tr>
+            <td class="fw-500">{{ f.moduleTitle }}</td>
+            <td>{{ f.employeeName }}</td>
+            <td class="text-muted">{{ f.department || '—' }}</td>
+            <td>@if (f.rating) { <span class="fb-badge fb-badge-rating">{{ f.rating }}/10</span> } @else { <span class="text-muted">—</span> }</td>
+            <td><span [class]="'fb-badge ' + (f.status==='SUBMITTED' ? 'fb-badge-submitted' : 'fb-badge-pending')">{{ f.status==='SUBMITTED' ? 'Submitted' : 'Pending' }}</span></td>
+            <td class="text-muted fb-text-sm">{{ f.submittedAt ? (f.submittedAt | date:'dd/MM/yyyy') : '—' }}</td>
+            <td><div class="actions justify-end">
+              <a [routerLink]="['/feedback', f.feedbackId]" class="fb-btn fb-btn-outline fb-btn-sm"><i class="bi bi-eye"></i></a>
+            </div></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if ((page?.totalPages ?? 0) > 1) {
+    <div class="fb-pagination">@for (p of pages; track p) { <button [class]="'fb-page-btn' + (p===currentPage ? ' active' : '')" (click)="goToPage(p)">{{ p + 1 }}</button> }</div>
+  }
+</div>

@@ -1,0 +1,34 @@
+<div class="fb-page">
+  <div class="fb-page-header"><div><h1 class="fb-page-title">Dashboard</h1><p class="fb-page-subtitle">Training feedback overview</p></div></div>
+  @if (loading) { <div class="fb-empty"><h3>Loading…</h3></div> }
+  @if (data) {
+    <div class="fb-kpi-grid">
+      <div class="fb-kpi"><div class="fb-kpi-label">Response Rate</div><div class="fb-kpi-value">{{ data.responseRatePercent }}%</div></div>
+      <div class="fb-kpi"><div class="fb-kpi-label">Avg Rating</div><div class="fb-kpi-value">{{ data.averageRatingOverall }}/10</div></div>
+      <div class="fb-kpi"><div class="fb-kpi-label">Submitted</div><div class="fb-kpi-value">{{ data.totalSubmitted }}</div></div>
+      <div class="fb-kpi fb-kpi-warning"><div class="fb-kpi-label">Pending</div><div class="fb-kpi-value">{{ data.pendingCount }}</div></div>
+    </div>
+    <div class="fb-charts-grid">
+      <div class="fb-chart-card"><div class="fb-chart-title">Submitted vs Pending</div><canvas baseChart [data]="pieData" [options]="pieOptions" type="pie"></canvas></div>
+      <div class="fb-chart-card"><div class="fb-chart-title">Feedback by Department</div><canvas baseChart [data]="donutData" [options]="donutOptions" type="doughnut"></canvas></div>
+    </div>
+    <div class="fb-charts-grid">
+      <div class="fb-chart-card"><div class="fb-chart-title">Rating Trend (by month)</div><canvas baseChart [data]="lineData" [options]="lineOptions" type="line"></canvas></div>
+      <div class="fb-chart-card"><div class="fb-chart-title">Top 5 Modules by Rating</div><canvas baseChart [data]="barData" [options]="barOptions" type="bar"></canvas></div>
+    </div>
+    <div class="fb-two-col-grid">
+      <div class="fb-table-wrap">
+        <div class="fb-table-wrap-title">Top Rated</div>
+        <table class="fb-table"><thead><tr><th>Module</th><th>Avg</th><th>Responses</th></tr></thead>
+          <tbody>@for (m of data.topModules; track m.title) { <tr><td class="fw-500">{{ m.title }}</td><td><span class="fb-badge fb-badge-rating">{{ m.avgRating }}</span></td><td class="text-muted">{{ m.responses }}</td></tr> }</tbody>
+        </table>
+      </div>
+      <div class="fb-table-wrap">
+        <div class="fb-table-wrap-title">Lowest Rated</div>
+        <table class="fb-table"><thead><tr><th>Module</th><th>Avg</th><th>Responses</th></tr></thead>
+          <tbody>@for (m of data.bottomModules; track m.title) { <tr><td class="fw-500">{{ m.title }}</td><td><span class="fb-badge fb-badge-danger">{{ m.avgRating }}</span></td><td class="text-muted">{{ m.responses }}</td></tr> }</tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

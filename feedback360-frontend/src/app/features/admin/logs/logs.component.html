@@ -1,0 +1,48 @@
+<div class="fb-page">
+  <div class="fb-page-header">
+    <div><h1 class="fb-page-title">Integration Logs</h1><p class="fb-page-subtitle">Audit trail for all TalentUp sync events and notifications</p></div>
+    <button class="fb-btn fb-btn-navy" (click)="syncNow()"><i class="bi bi-arrow-repeat"></i> Sync Now</button>
+  </div>
+  @if (syncMessage) { <div class="fb-alert fb-alert-success"><i class="bi bi-check-circle-fill"></i> {{ syncMessage }}</div> }
+  <div class="fb-filter-bar">
+    <div class="fb-filter-group"><label>Type</label><input [(ngModel)]="filterType" class="fb-input" placeholder="POLL_RUN…"></div>
+    <div class="fb-filter-group"><label>Status</label>
+      <select [(ngModel)]="filterStatus" class="fb-select">
+        <option value="">Any</option><option value="SUCCESS">SUCCESS</option><option value="FAILED">FAILED</option>
+      </select>
+    </div>
+    <div class="fb-filter-group"><label>Since</label><input type="date" [(ngModel)]="filterSince" class="fb-input"></div>
+    <div class="fb-filter-group"><label>Show</label>
+      <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" class="fb-select">
+        @for (s of pageSizeOptions; track s) { <option [value]="s">{{ s }} per page</option> }
+      </select>
+    </div>
+    <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> Filter</button>
+    <button class="fb-btn fb-btn-outline" (click)="clearFilter()">Clear</button>
+  </div>
+  <div class="fb-table-wrap">
+    <table class="fb-table">
+      <thead><tr><th class="fb-col-time">Time</th><th>Type</th><th class="fb-col-status">Status</th><th>Message</th></tr></thead>
+      <tbody>
+        @if (loading) { <tr><td colspan="4" class="text-muted" style="padding:24px;text-align:center">Loading…</td></tr> }
+        @if (!loading && page?.content?.length === 0) { <tr><td colspan="4"><div class="fb-empty"><div class="fb-empty-icon">📋</div><h3>No logs yet</h3><p>Trigger a sync to see the first entries.</p></div></td></tr> }
+        @for (l of page?.content ?? []; track l.id) {
+          <tr>
+            <td class="text-muted fb-text-xs">{{ l.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+            <td><code class="fb-code-chip">{{ l.type }}</code></td>
+            <td><span [class]="'fb-badge ' + (l.status === 'SUCCESS' ? 'fb-badge-success' : 'fb-badge-failed')">{{ l.status }}</span></td>
+            <td class="text-muted fb-text-sm">{{ l.message }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if ((page?.totalPages ?? 0) > 1) {
+    <div class="fb-pagination">
+      @for (p of pages; track p) {
+        <button [class]="'fb-page-btn' + (p === currentPage ? ' active' : '')" (click)="goToPage(p)">{{ p + 1 }}</button>
+      }
+    </div>
+    <p class="text-muted fb-text-sm text-center">Showing {{ page?.size }} of {{ page?.totalElements }} entries</p>
+  }
+</div>

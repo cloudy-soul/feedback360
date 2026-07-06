@@ -1,0 +1,41 @@
+<div class="fb-page fb-page-narrow">
+  <div class="fb-page-header">
+    <div>
+      <h1 class="fb-page-title">System Settings</h1>
+      <p class="fb-page-subtitle">Configure reminder behaviour and notification templates</p>
+    </div>
+  </div>
+  
+  @if (success) { 
+    <div class="fb-alert fb-alert-success">
+      <i class="bi bi-check-circle-fill"></i> Settings saved.
+    </div> 
+  }
+  
+  <div class="fb-card">
+    <h3 class="fb-card-title"><i class="bi bi-bell"></i> Reminder Settings</h3>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="fb-form-group">
+        <label class="fb-label">Days before sending a reminder *</label>
+        <input type="number" formControlName="reminderDelayDays" class="fb-input fb-field-narrow" min="1" max="30">
+        <small class="fb-hint">Employees with pending feedback will receive a reminder after this many days.</small>
+      </div>
+      <div class="fb-form-group">
+        <label class="fb-label">Reminder email template</label>
+        <textarea formControlName="reminderTemplate" class="fb-textarea" rows="4"></textarea>
+        <small class="fb-hint">Use <code class="fb-code-chip">{{ '{' }}moduleTitle{{ '}' }}</code> as a placeholder.</small>
+      </div>
+      <button type="submit" class="fb-btn fb-btn-primary">
+        <i class="bi bi-floppy"></i> Save settings
+      </button>
+    </form>
+  </div>
+  
+  <div class="fb-card">
+    <h3 class="fb-card-title"><i class="bi bi-arrow-repeat"></i> TalentUp Sync</h3>
+    <p class="text-muted fb-text-sm" style="margin-bottom:16px">The scheduler polls TalentUp every 30 minutes. Trigger an immediate sync here.</p>
+    <button class="fb-btn fb-btn-navy" (click)="syncNow()">
+      <i class="bi bi-play-fill"></i> Trigger sync now
+    </button>
+  </div>
+</div>

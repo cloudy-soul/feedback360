@@ -1,0 +1,49 @@
+<div class="fb-login-page">
+  <div class="fb-login-hero">
+    <div class="fb-login-logo">
+      <span class="cap-text">Capgemini</span>
+      <div class="fb-brand-divider-lg"></div>
+      <span class="app-name">FeedBack360</span>
+    </div>
+    <h1>Log in to your account</h1>
+    <p class="fb-login-subtitle">Training feedback platform</p>
+  </div>
+  <div class="fb-login-bottom">
+    <div class="fb-login-card">
+      @if (error) {
+        <div class="fb-alert fb-alert-error">
+          <i class="bi bi-exclamation-circle-fill"></i> {{ error }}
+        </div>
+      }
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="fb-form-group">
+          <label class="fb-label">Email</label>
+          <div class="fb-input-icon-wrap">
+            <i class="bi bi-person icon"></i>
+            <input type="email" formControlName="email" class="fb-input" placeholder="your.email@capgemini.com">
+          </div>
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <small class="fb-field-error">Please enter a valid email.</small>
+          }
+        </div>
+        <div class="fb-form-group">
+          <label class="fb-label">Password</label>
+          <div class="fb-input-icon-wrap">
+            <input type="password" formControlName="password" class="fb-input icon-right-padded" placeholder="••••••••">
+            <i class="bi bi-lock icon icon-right"></i>
+          </div>
+        </div>
+        <button type="submit" class="fb-btn fb-btn-primary fb-login-submit" [disabled]="loading">
+          {{ loading ? 'Logging in…' : 'Log In' }}
+        </button>
+      </form>
+    </div>
+    <div class="fb-login-help">
+      <i class="bi bi-person-circle fb-login-help-icon"></i>
+      <div>
+        <h3>Need help?</h3>
+        <p>Contact your IT department or raise a support ticket via the Capgemini service portal.</p>
+      </div>
+    </div>
+  </div>
+</div>

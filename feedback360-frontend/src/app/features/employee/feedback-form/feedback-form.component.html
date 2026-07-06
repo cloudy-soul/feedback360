@@ -1,0 +1,31 @@
+<div class="fb-page fb-page-medium">
+  <div class="fb-detail-header"><h2>Submit Feedback</h2><div class="fb-detail-meta"><span>Module #{{ moduleId }}</span></div></div>
+  @if (error) { <div class="fb-alert fb-alert-error"><i class="bi bi-exclamation-circle-fill"></i> {{ error }}</div> }
+  <div class="fb-card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="fb-form-group">
+        <label class="fb-label">Rating <span class="required">*</span></label>
+        <div class="fb-rating-wrap">
+          <span class="fb-rating-scale-label">0</span>
+          <input type="range" min="0" max="10" formControlName="rating" class="fb-slider">
+          <span class="fb-rating-scale-label">10</span>
+          <span class="fb-rating-value">{{ ratingDisplay }}</span>
+          <span class="fb-rating-scale-label">/ 10</span>
+        </div>
+      </div>
+      <div class="fb-form-group">
+        <label class="fb-label">Comment <span class="required">*</span></label>
+        <textarea formControlName="comment" class="fb-textarea" rows="5" placeholder="Share your thoughts about this training module…"></textarea>
+        @if (form.get('comment')?.invalid && form.get('comment')?.touched) {
+          <small class="fb-field-error">Comment is required.</small>
+        }
+      </div>
+      <div class="fb-form-actions">
+        <button type="submit" class="fb-btn fb-btn-primary" [disabled]="submitting">
+          <i class="bi bi-send-fill"></i> {{ submitting ? 'Submitting…' : 'Submit feedback' }}
+        </button>
+        <a routerLink="/my-modules" class="fb-btn fb-btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
