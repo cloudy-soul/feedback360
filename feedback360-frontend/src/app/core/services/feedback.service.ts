@@ -9,15 +9,15 @@ export class FeedbackService {
   constructor(private http: HttpClient) {}
 
   getMyModules(): Observable<FeedbackSummary[]> {
-    return this.http.get<FeedbackSummary[]>('/api/feedback/my-modules');
+    return this.http.get<FeedbackSummary[]>('/api/feedback/my-modules', { withCredentials: true });
   }
 
   getDetail(id: number): Observable<FeedbackDetail> {
-    return this.http.get<FeedbackDetail>(`/api/feedback/${id}`);
+    return this.http.get<FeedbackDetail>(`/api/feedback/${id}`, { withCredentials: true });
   }
 
   submit(moduleId: number, body: FeedbackSubmitRequest): Observable<{ feedbackId: number }> {
-    return this.http.post<{ feedbackId: number }>(`/api/feedback/submit?moduleId=${moduleId}`, body);
+    return this.http.post<{ feedbackId: number }>(`/api/feedback/submit?moduleId=${moduleId}`, body, { withCredentials: true });
   }
 
   browseManager(params: Record<string, string | number>): Observable<Page<FeedbackBrowse>> {

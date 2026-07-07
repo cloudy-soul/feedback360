@@ -1,6 +1,7 @@
 package com.feedback.feedback360;
 
 import com.feedback.feedback360.dto.UserRequestDTO;
+import com.feedback.feedback360.entities.User;
 import com.feedback.feedback360.enums.Role;
 import com.feedback.feedback360.repositories.UserRepository;
 import com.feedback.feedback360.services.UserService;
@@ -60,5 +61,12 @@ class UserServiceTest {
         var user = userService.create(sampleDto("deact@example.com"));
         userService.setActive(user.getId(), false);
         assertThat(userRepository.findById(user.getId()).get().isActive()).isFalse();
+    }
+
+    @Test
+    void userCreation_preservesFullName() {
+        User user = userService.create(sampleDto("name@example.com"));
+        assertThat(user.getFirstName()).isEqualTo("Test");
+        assertThat(user.getLastName()).isEqualTo("User");
     }
 }

@@ -1,6 +1,6 @@
 <div class="fb-page">
   <div class="fb-page-header">
-    <div><h1 class="fb-page-title">My Completed Modules</h1><p class="fb-page-subtitle">Share your feedback to help improve future training</p></div>
+    <div><h1 class="fb-page-title">My Completed Modules</h1><p class="fb-page-subtitle">{{ auth.fullName() ? 'Employee ' + auth.fullName() : 'Share your feedback to help improve future training' }}</p></div>
   </div>
   @if (loading) { <div class="fb-empty"><h3>Loading…</h3></div> }
   @if (!loading && modules.length === 0) {

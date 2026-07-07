@@ -55,10 +55,11 @@ public class AuthController {
         // cookie.setSecure(true); // enable once served over HTTPS
         response.addCookie(cookie);
 
-        // Angular reads role and userId to decide where to navigate after login
+        // Angular reads role, userId, and fullName to decide where to navigate and display the user
         return ResponseEntity.ok(Map.of(
                 "role", user.getRole().name(),
-                "userId", user.getId().toString()
+                "userId", user.getId().toString(),
+                "fullName", user.getFirstName() + " " + user.getLastName()
         ));
     }
 

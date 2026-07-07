@@ -9,12 +9,41 @@
       <div class="fb-kpi fb-kpi-warning"><div class="fb-kpi-label">Pending</div><div class="fb-kpi-value">{{ data.pendingCount }}</div></div>
     </div>
     <div class="fb-charts-grid">
-      <div class="fb-chart-card"><div class="fb-chart-title">Submitted vs Pending</div><canvas baseChart [data]="pieData" [options]="pieOptions" type="pie"></canvas></div>
-      <div class="fb-chart-card"><div class="fb-chart-title">Feedback by Department</div><canvas baseChart [data]="donutData" [options]="donutOptions" type="doughnut"></canvas></div>
+      <div class="fb-chart-card">
+        <div class="fb-chart-title">Submitted vs Pending</div>
+        <svg viewBox="0 0 220 220" class="w-100" style="max-width: 220px; margin: 0 auto; display: block;">
+          <circle cx="110" cy="110" r="80" fill="none" stroke="#e9ecef" stroke-width="24"></circle>
+          <circle cx="110" cy="110" r="80" fill="none" stroke="#27795A" stroke-width="24" stroke-dasharray="502.4" [attr.stroke-dashoffset]="pieValues[0] ? 502.4 - (pieValues[0] / (pieValues[0] + pieValues[1])) * 502.4 : 502.4" transform="rotate(-90 110 110)"></circle>
+          <circle cx="110" cy="110" r="80" fill="none" stroke="#B7770D" stroke-width="24" stroke-dasharray="502.4" [attr.stroke-dashoffset]="pieValues[1] ? 502.4 - (pieValues[1] / (pieValues[0] + pieValues[1])) * 502.4 : 502.4" transform="rotate(-90 110 110)"></circle>
+        </svg>
+        <div class="text-center mt-2"><small>{{ pieValues[0] }} submitted / {{ pieValues[1] }} pending</small></div>
+      </div>
+      <div class="fb-chart-card">
+        <div class="fb-chart-title">Feedback by Department</div>
+        <ul class="mb-0 ps-3">
+          @for (label of departmentLabels; track label) {
+            <li><strong>{{ label }}</strong>: {{ departmentValues[$index] }}</li>
+          }
+        </ul>
+      </div>
     </div>
     <div class="fb-charts-grid">
-      <div class="fb-chart-card"><div class="fb-chart-title">Rating Trend (by month)</div><canvas baseChart [data]="lineData" [options]="lineOptions" type="line"></canvas></div>
-      <div class="fb-chart-card"><div class="fb-chart-title">Top 5 Modules by Rating</div><canvas baseChart [data]="barData" [options]="barOptions" type="bar"></canvas></div>
+      <div class="fb-chart-card">
+        <div class="fb-chart-title">Rating Trend (by month)</div>
+        <ul class="mb-0 ps-3">
+          @for (label of trendLabels; track label) {
+            <li><strong>{{ label }}</strong>: {{ trendValues[$index] }}/10</li>
+          }
+        </ul>
+      </div>
+      <div class="fb-chart-card">
+        <div class="fb-chart-title">Top 5 Modules by Rating</div>
+        <ul class="mb-0 ps-3">
+          @for (label of moduleLabels; track label) {
+            <li><strong>{{ label }}</strong>: {{ moduleValues[$index] }}/10</li>
+          }
+        </ul>
+      </div>
     </div>
     <div class="fb-two-col-grid">
       <div class="fb-table-wrap">

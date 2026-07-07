@@ -1,10 +1,14 @@
 package com.feedback.feedback360.services;
 
 import com.feedback.feedback360.entities.Feedback;
+import com.feedback.feedback360.entities.ModuleFormation;
+import com.feedback.feedback360.entities.User;
 import com.feedback.feedback360.enums.FeedbackStatus;
 import com.feedback.feedback360.enums.NotificationStatus;
 import com.feedback.feedback360.repositories.FeedbackRepository;
+import com.feedback.feedback360.repositories.ModuleFormationRepository;
 import com.feedback.feedback360.repositories.NotificationRepository;
+import com.feedback.feedback360.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,8 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
     private final NotificationRepository notificationRepository;
+    private final UserRepository userRepository;
+    private final ModuleFormationRepository moduleFormationRepository;
 
     public static class AlreadySubmittedException extends RuntimeException {
         public AlreadySubmittedException(String msg) { super(msg); }
@@ -41,7 +47,17 @@ public class FeedbackService {
     @Transactional
     public Feedback submit(Long userId, Long moduleId, Short rating, String comment) {
         Feedback feedback = feedbackRepository.findByUserIdAndModuleId(userId, moduleId)
-                .orElseThrow(() -> new NotFoundException("No feedback shell found for this module"));
+                .orElseGet(() -> {
+                    User user = userRepository.findById(userId)
+                            .orElseThrow(() -> new NotFoundException("User not found: " + userId));
+                    ModuleFormation module = moduleFormationRepository.findById(moduleId)
+                            .orElseThrow(() -> new NotFoundException("Module not found: " + moduleId));
+                    return feedbackRepository.save(Feedback.builder()
+                            .user(user)
+                            .module(module)
+                            .status(FeedbackStatus.NOT_SUBMITTED)
+                            .build());
+                });
 
         if (feedback.getStatus() == FeedbackStatus.SUBMITTED) {
             throw new AlreadySubmittedException("Feedback already submitted for this module");
