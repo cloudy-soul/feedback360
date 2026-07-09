@@ -13,14 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Employee-facing feedback flow. Feedback is rating (0-10) + comment, both mandatory —
- * confirmed requirement, no dynamic question bank.
- */
 @RestController
 @RequestMapping("/api/feedback")
 @RequiredArgsConstructor
@@ -61,6 +58,7 @@ public class FeedbackController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get feedback detail — owner sees their own, manager/admin can see any")
+    @Transactional(readOnly = true)
     public ResponseEntity<FeedbackDetailDTO> detail(@PathVariable Long id,
                                                     @AuthenticationPrincipal Long userId) {
         Feedback f = feedbackService.findById(id);

@@ -11,10 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/manager/feedbacks")
@@ -26,6 +28,7 @@ public class ManagerFeedbackController {
 
     @GetMapping
     @Operation(summary = "Browse/filter feedback with pagination")
+    @Transactional(readOnly = true)
     public Page<FeedbackBrowseDTO> browse(
             @RequestParam(required = false) String module,
             @RequestParam(required = false) String department,
@@ -36,8 +39,8 @@ public class ManagerFeedbackController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
 
-        Specification<Feedback> spec = Specification
-                .where(FeedbackSpecifications.moduleTitleContains(module))
+        Specification<Feedback> spec = Specification.<Feedback>where(null)
+                .and(FeedbackSpecifications.moduleTitleContains(module))
                 .and(FeedbackSpecifications.departmentEquals(department))
                 .and(FeedbackSpecifications.submittedAfter(dateFrom != null ? dateFrom.atStartOfDay() : null))
                 .and(FeedbackSpecifications.submittedBefore(dateTo != null ? dateTo.atTime(23, 59, 59) : null))
@@ -50,6 +53,7 @@ public class ManagerFeedbackController {
 
     @GetMapping("/export")
     @Operation(summary = "Export the filtered feedback list as CSV")
+    @Transactional(readOnly = true)
     public void export(
             @RequestParam(required = false) String module,
             @RequestParam(required = false) String department,
@@ -59,15 +63,15 @@ public class ManagerFeedbackController {
             @RequestParam(required = false) String status,
             HttpServletResponse response) throws Exception {
 
-        Specification<Feedback> spec = Specification
-                .where(FeedbackSpecifications.moduleTitleContains(module))
+        Specification<Feedback> spec = Specification.<Feedback>where(null)
+                .and(FeedbackSpecifications.moduleTitleContains(module))
                 .and(FeedbackSpecifications.departmentEquals(department))
                 .and(FeedbackSpecifications.submittedAfter(dateFrom != null ? dateFrom.atStartOfDay() : null))
                 .and(FeedbackSpecifications.submittedBefore(dateTo != null ? dateTo.atTime(23, 59, 59) : null))
                 .and(FeedbackSpecifications.minRating(minRating))
                 .and(FeedbackSpecifications.statusEquals(status));
 
-        var results = feedbackRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "submittedAt"));
+        List<Feedback> results = feedbackRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "submittedAt"));
 
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=feedback_export.csv");
