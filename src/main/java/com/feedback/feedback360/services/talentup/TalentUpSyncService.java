@@ -109,10 +109,17 @@ public class TalentUpSyncService {
                 .user(user).module(module)
                 .status(NotificationStatus.SENT).type(NotificationType.INITIAL).build());
 
+        log.debug("Sending feedback invite email to {} for module {} ({})", user.getEmail(), module.getId(), module.getTitle());
         boolean emailOk = mailService.sendFeedbackInvite(user, module);
-        if (!emailOk) {
+        if (emailOk) {
+            writeLog("EMAIL_SENT", "SUCCESS",
+                    "Invite sent to " + user.getEmail() + " for module " + module.getId(), module.getId());
+        } else {
             notification.setStatus(NotificationStatus.FAILED);
             notificationRepository.save(notification);
+            log.warn("Feedback invite email FAILED for {} / module {} — see prior SMTP error above", user.getEmail(), module.getId());
+            writeLog("EMAIL_FAILED", "FAILED",
+                    "Invite email failed for " + user.getEmail() + " / module " + module.getId(), module.getId());
         }
 
         writeLog("POLL_ITEM_SAVED", "SUCCESS",
