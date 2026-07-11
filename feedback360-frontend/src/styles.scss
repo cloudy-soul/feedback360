@@ -275,8 +275,8 @@ body {
 .fb-login-page { min-height: 100vh; display: flex; flex-direction: column; background: var(--page-bg); }
 .fb-login-hero { background: var(--navy); padding: 40px 40px 60px; text-align: center; flex-shrink: 0; }
 .fb-login-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 32px; }
-.fb-login-logo .fb-brand-logo { height: 28px; width: auto; max-width: 110px; object-fit: contain; display: block; flex-shrink: 0; }
-.fb-login-logo .fb-brand-logo-nav { height: 24px; width: auto; max-width: 100px; object-fit: contain; display: block; flex-shrink: 0; }
+.fb-brand-logo { height: 28px; width: auto; max-width: 110px; object-fit: contain; display: block; flex-shrink: 0; }
+.fb-brand-logo-nav { height: 24px; width: auto; max-width: 100px; object-fit: contain; display: block; flex-shrink: 0; }
 .fb-login-logo .app-name { font-weight: 700; color: var(--white); font-size: 22px; }
 .fb-login-hero h1 { color: var(--white); font-size: 26px; font-weight: 700; margin: 0; }
 .fb-login-subtitle { color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 14px; }
