@@ -91,6 +91,7 @@ body {
 .fb-page-header {
   display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
 }
+.fb-header-actions { display: flex; gap: 10px; align-items: center; }
 .fb-page-title { font-size: 22px; font-weight: 700; color: var(--navy); margin: 0; }
 .fb-page-subtitle { font-size: 13px; color: var(--text-muted); margin: 4px 0 0; }
 
@@ -207,6 +208,8 @@ body {
   border-color: var(--sage); box-shadow: 0 0 0 3px rgba(139,175,159,0.2); background: var(--white);
 }
 .fb-input-readonly { opacity: 0.6; cursor: not-allowed; }
+.fb-input-invalid { border-color: var(--danger) !important; background: var(--danger-bg) !important; }
+.fb-input-invalid:focus { box-shadow: 0 0 0 3px rgba(192,57,43,0.15) !important; }
 .fb-input-icon-wrap { position: relative; }
 .fb-input-icon-wrap .fb-input { padding-left: 40px; }
 .fb-input-icon-wrap .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--sage-dark); font-size: 16px; }
@@ -231,6 +234,8 @@ body {
 .fb-filter-group { display: flex; flex-direction: column; gap: 4px; min-width: 130px; }
 .fb-filter-group label { font-size: 11.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 .fb-filter-group .fb-input, .fb-filter-group .fb-select { min-width: 0; }
+.fb-filter-actions { display: flex; gap: 8px; margin-left: auto; }
+.fb-filter-actions .fb-btn { flex: 1 1 0; justify-content: center; min-width: 100px; }
 
 /* ─── PAGINATION ─────────────────────────── */
 .fb-pagination { display: flex; gap: 4px; align-items: center; justify-content: center; margin-top: 20px; }
@@ -269,8 +274,9 @@ body {
 /* ─── LOGIN ──────────────────────────────── */
 .fb-login-page { min-height: 100vh; display: flex; flex-direction: column; background: var(--page-bg); }
 .fb-login-hero { background: var(--navy); padding: 40px 40px 60px; text-align: center; flex-shrink: 0; }
-.fb-login-logo { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 32px; }
-.fb-login-logo .cap-text { font-style: italic; font-weight: 300; color: var(--sage-light); font-size: 26px; }
+.fb-login-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 32px; }
+.fb-login-logo .fb-brand-logo { height: 28px; width: auto; max-width: 110px; object-fit: contain; display: block; flex-shrink: 0; }
+.fb-login-logo .fb-brand-logo-nav { height: 24px; width: auto; max-width: 100px; object-fit: contain; display: block; flex-shrink: 0; }
 .fb-login-logo .app-name { font-weight: 700; color: var(--white); font-size: 22px; }
 .fb-login-hero h1 { color: var(--white); font-size: 26px; font-weight: 700; margin: 0; }
 .fb-login-subtitle { color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 14px; }
@@ -303,7 +309,6 @@ body {
 .no-margin     { margin: 0; }
 .fb-hidden     { display: none; }
 .fb-star       { color: #F59E0B; }
-.fb-back-btn   { margin-bottom: 20px; }
 .fb-text-xs    { font-size: 12.5px; }
 .fb-text-sm    { font-size: 13px; }
 .justify-end   { justify-content: flex-end; }

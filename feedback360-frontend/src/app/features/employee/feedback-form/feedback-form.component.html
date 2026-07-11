@@ -1,5 +1,5 @@
 <div class="fb-page fb-page-medium">
-  <div class="fb-detail-header"><h2>Submit Feedback</h2><div class="fb-detail-meta"><span>Module #{{ moduleId }}</span></div></div>
+  <div class="fb-detail-header"><h2>Submit Feedback</h2><div class="fb-detail-meta"><span>{{ moduleTitle || 'Loading module…' }}</span></div></div>
   @if (error) { <div class="fb-alert fb-alert-error"><i class="bi bi-exclamation-circle-fill"></i> {{ error }}</div> }
   <div class="fb-card">
     <form [formGroup]="form" (ngSubmit)="submit()">

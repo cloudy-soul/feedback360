@@ -6,12 +6,21 @@ import { FeedbackService } from '../../../core/services/feedback.service';
 
 @Component({ selector: 'app-feedback-form', standalone: true, imports: [ReactiveFormsModule, CommonModule, RouterLink], templateUrl: './feedback-form.component.html' })
 export class FeedbackFormComponent implements OnInit {
-  form: FormGroup; moduleId!: number; error: string | null = null; submitting = false; ratingDisplay = 5;
+  form: FormGroup; moduleId!: number; moduleTitle: string | null = null; error: string | null = null; submitting = false; ratingDisplay = 5;
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private router: Router, private svc: FeedbackService) {
     this.form = this.fb.group({ rating: [5, [Validators.required, Validators.min(0), Validators.max(10)]], comment: ['', Validators.required] });
     this.form.get('rating')!.valueChanges.subscribe(v => this.ratingDisplay = v);
   }
-  ngOnInit(): void { this.moduleId = Number(this.route.snapshot.queryParams['moduleId']); }
+  ngOnInit(): void {
+    this.moduleId = Number(this.route.snapshot.queryParams['moduleId']);
+    this.moduleTitle = this.route.snapshot.queryParams['moduleTitle'] ?? null;
+    if (!this.moduleTitle) {
+      this.svc.getMyModules().subscribe(modules => {
+        const match = modules.find(m => m.moduleId === this.moduleId);
+        if (match) this.moduleTitle = match.moduleTitle;
+      });
+    }
+  }
   submit(): void {
     if (this.form.invalid || this.submitting) return;
     this.submitting = true; this.error = null;

@@ -4,7 +4,11 @@ import com.feedback.feedback360.dto.UserRequestDTO;
 import com.feedback.feedback360.entities.User;
 import com.feedback.feedback360.enums.Role;
 import com.feedback.feedback360.repositories.UserRepository;
+import com.feedback.feedback360.repository.spec.UserSpecifications;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +23,14 @@ public class UserService {
 
     public List<User> listAll() {
         return userRepository.findAll();
+    }
+
+    public Page<User> search(String search, Role role, Boolean active, Pageable pageable) {
+        Specification<User> spec = Specification.<User>where(null)
+                .and(UserSpecifications.nameOrEmailContains(search))
+                .and(UserSpecifications.roleEquals(role))
+                .and(UserSpecifications.activeEquals(active));
+        return userRepository.findAll(spec, pageable);
     }
 
     public User findById(Long id) {

@@ -17,8 +17,10 @@
         @for (s of pageSizeOptions; track s) { <option [value]="s">{{ s }} per page</option> }
       </select>
     </div>
-    <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> Filter</button>
-    <button class="fb-btn fb-btn-outline" (click)="clearFilter()">Clear</button>
+    <div class="fb-filter-actions">
+      <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> Filter</button>
+      <button class="fb-btn fb-btn-outline" (click)="clearFilter()">Clear</button>
+    </div>
   </div>
   <div class="fb-table-wrap">
     <table class="fb-table">

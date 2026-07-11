@@ -75,7 +75,7 @@ public class FeedbackController {
         return ResponseEntity.ok(FeedbackDetailDTO.builder()
                 .feedbackId(f.getId())
                 .moduleTitle(f.getModule().getTitle())
-                .submittedBy(f.getUser().getFirstName() + " " + f.getUser().getLastName())
+                .submittedBy(com.feedback.feedback360.util.NameFormatter.display(f.getUser().getFirstName(), f.getUser().getLastName()))
                 .submittedAt(f.getSubmittedAt())
                 .rating(f.getRating())
                 .comment(f.getComment())

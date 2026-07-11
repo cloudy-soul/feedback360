@@ -5,12 +5,21 @@ import { User, UserRequest } from '../models/user.model';
 import { IntegrationLog, Page } from '../models/integration-log.model';
 
 interface LogFilter { type?: string; status?: string; since?: string; page?: number; pageSize?: number; }
+interface UserFilter { search?: string; role?: string; active?: boolean; page?: number; pageSize?: number; }
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   constructor(private http: HttpClient) {}
 
-  getUsers(): Observable<User[]> { return this.http.get<User[]>('/api/admin/users'); }
+  getUsers(filter: UserFilter = {}): Observable<Page<User>> {
+    let params = new HttpParams();
+    if (filter.search)             params = params.set('search', filter.search);
+    if (filter.role)               params = params.set('role', filter.role);
+    if (filter.active != null)     params = params.set('active', String(filter.active));
+    if (filter.page != null)       params = params.set('page', String(filter.page));
+    if (filter.pageSize != null)   params = params.set('pageSize', String(filter.pageSize));
+    return this.http.get<Page<User>>('/api/admin/users', { params });
+  }
   createUser(req: UserRequest): Observable<User> { return this.http.post<User>('/api/admin/users', req); }
   updateUser(id: number, req: UserRequest): Observable<User> { return this.http.put<User>(`/api/admin/users/${id}`, req); }
   deactivateUser(id: number): Observable<void> { return this.http.patch<void>(`/api/admin/users/${id}/deactivate`, {}); }

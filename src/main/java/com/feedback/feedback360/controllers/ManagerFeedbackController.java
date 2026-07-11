@@ -82,7 +82,7 @@ public class ManagerFeedbackController {
             for (Feedback f : results) {
                 writer.printf("%s,%s,%s,%s,%s,%s,%s%n",
                         escape(f.getModule().getTitle()),
-                        escape(f.getUser().getFirstName() + " " + f.getUser().getLastName()),
+                        escape(com.feedback.feedback360.util.NameFormatter.display(f.getUser().getFirstName(), f.getUser().getLastName())),
                         escape(f.getUser().getEmail()),
                         escape(f.getUser().getDepartment()),
                         f.getRating() != null ? f.getRating() : "",

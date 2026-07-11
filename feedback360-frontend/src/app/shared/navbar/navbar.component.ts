@@ -9,7 +9,7 @@ import { AuthService } from '../../core/services/auth.service';
   template: `
     <nav class="fb-navbar">
       <a routerLink="/" class="fb-navbar-brand">
-        <span class="cap">Capgemini</span>
+        <img src="/assets/capLogo.png" alt="Capgemini logo" class="fb-brand-logo fb-brand-logo-nav" />
         <span class="fb-brand-divider"></span>
         <span>FeedBack360</span>
       </a>
@@ -26,7 +26,7 @@ import { AuthService } from '../../core/services/auth.service';
         <a routerLink="/my-modules" routerLinkActive="active" class="fb-nav-link">My Modules</a>
       }
       <div class="fb-navbar-right">
-        <span class="fb-navbar-user">&#128100; {{ auth.role() }}</span>
+        <span class="fb-navbar-user">&#128100; {{ auth.fullName() }} · {{ auth.role() }}</span>
         <button class="fb-btn fb-btn-outline fb-btn-sm fb-navbar-logout" (click)="auth.logout()">Logout</button>
       </div>
     </nav>

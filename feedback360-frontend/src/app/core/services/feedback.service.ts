@@ -31,4 +31,8 @@ export class FeedbackService {
     Object.entries(params).forEach(([k, v]) => { if (v) p = p.set(k, v); });
     window.open('/api/manager/feedbacks/export?' + p.toString(), '_blank');
   }
+
+  sendRemindersNow(): Observable<{ result: string }> {
+    return this.http.post<{ result: string }>('/api/manager/reminders/send-now', {}, { withCredentials: true });
+  }
 }

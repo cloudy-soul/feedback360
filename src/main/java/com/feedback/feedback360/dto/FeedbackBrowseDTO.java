@@ -2,6 +2,7 @@ package com.feedback.feedback360.dto;
 
 import com.feedback.feedback360.entities.Feedback;
 import com.feedback.feedback360.enums.FeedbackStatus;
+import com.feedback.feedback360.util.NameFormatter;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -23,7 +24,7 @@ public class FeedbackBrowseDTO {
                 .feedbackId(f.getId())
                 .moduleTitle(f.getModule().getTitle())
                 .moduleId(f.getModule().getId())
-                .employeeName(f.getUser().getFirstName() + " " + f.getUser().getLastName())
+                .employeeName(NameFormatter.display(f.getUser().getFirstName(), f.getUser().getLastName()))
                 .employeeEmail(f.getUser().getEmail())
                 .employeeId(f.getUser().getId())
                 .department(f.getUser().getDepartment())

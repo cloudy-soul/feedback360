@@ -3,8 +3,8 @@
   <div class="fb-page-header">
     <div><h1 class="fb-page-title">Users</h1>
         <p class="fb-page-subtitle">
-          {{ users.length }}
-          {{ users.length === 1 ? 'account' : 'accounts' }}
+          {{ page?.totalElements ?? 0 }}
+          {{ (page?.totalElements ?? 0) === 1 ? 'account' : 'accounts' }}
           registered
         </p>
         </div>
@@ -17,21 +17,32 @@
       @if (formError) { <div class="fb-alert fb-alert-error"><i class="bi bi-exclamation-circle-fill"></i> {{ formError }}</div> }
       <form [formGroup]="form" (ngSubmit)="save()">
         <div class="fb-form-row">
-          <div class="fb-form-group mb-0"><label class="fb-label">First name *</label><input type="text" formControlName="firstName" class="fb-input"></div>
-          <div class="fb-form-group mb-0"><label class="fb-label">Last name *</label><input type="text" formControlName="lastName" class="fb-input"></div>
+          <div class="fb-form-group mb-0">
+            <label class="fb-label">First name *</label>
+            <input type="text" formControlName="firstName" class="fb-input" [class.fb-input-invalid]="isInvalid('firstName')">
+            @if (isInvalid('firstName')) { <small class="fb-field-error">First name is required.</small> }
+          </div>
+          <div class="fb-form-group mb-0">
+            <label class="fb-label">Last name *</label>
+            <input type="text" formControlName="lastName" class="fb-input" [class.fb-input-invalid]="isInvalid('lastName')">
+            @if (isInvalid('lastName')) { <small class="fb-field-error">Last name is required.</small> }
+          </div>
         </div>
         <div class="fb-form-group mt-16">
           <label class="fb-label">Email *</label>
-          <input type="email" formControlName="email" class="fb-input" [class.fb-input-readonly]="editingId !== null">
+          <input type="email" formControlName="email" class="fb-input" [class.fb-input-readonly]="editingId !== null" [class.fb-input-invalid]="isInvalid('email')">
           @if (editingId) { <small class="fb-hint">🔒 Email cannot be changed — it is the TalentUp sync key.</small> }
+          @if (isInvalid('email')) { <small class="fb-field-error">A valid email is required.</small> }
         </div>
         <div class="fb-form-group">
           <label class="fb-label">{{ editingId ? 'Password (leave blank to keep current)' : 'Password *' }}</label>
-          <input type="password" formControlName="password" class="fb-input" placeholder="••••••••">
+          <input type="password" formControlName="password" class="fb-input" placeholder="••••••••" [class.fb-input-invalid]="isInvalid('password')">
+          @if (isInvalid('password')) { <small class="fb-field-error">Password is required.</small> }
         </div>
         <div class="fb-form-row">
-          <div class="fb-form-group mb-0"><label class="fb-label">Role *</label>
-            <select formControlName="role" class="fb-select">@for (r of roles; track r) { <option [value]="r">{{ r }}</option> }</select>
+          <div class="fb-form-group mb-0">
+            <label class="fb-label">Role *</label>
+            <select formControlName="role" class="fb-select" [class.fb-input-invalid]="isInvalid('role')">@for (r of roles; track r) { <option [value]="r">{{ r }}</option> }</select>
           </div>
           <div class="fb-form-group mb-0"><label class="fb-label">Department</label><input type="text" formControlName="department" class="fb-input"></div>
         </div>
@@ -42,17 +53,36 @@
       </form>
     </div>
   }
+
+  <div class="fb-filter-bar">
+    <div class="fb-filter-group"><label>Search</label><input [(ngModel)]="search" class="fb-input" placeholder="Name or email…"></div>
+    <div class="fb-filter-group"><label>Role</label>
+      <select [(ngModel)]="roleFilter" class="fb-select">
+        <option value="">Any</option>@for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+      </select>
+    </div>
+    <div class="fb-filter-group"><label>Show</label>
+      <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" class="fb-select">
+        @for (s of pageSizeOptions; track s) { <option [value]="s">{{ s }} per page</option> }
+      </select>
+    </div>
+    <div class="fb-filter-actions">
+      <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> Filter</button>
+      <button class="fb-btn fb-btn-outline" (click)="clearFilter()">Clear</button>
+    </div>
+  </div>
+
   <div class="fb-table-wrap">
     <table class="fb-table">
-      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Status</th><th class="text-right"></thead>
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th class="text-right"></th></tr></thead>
       <tbody>
-        @if (users.length === 0) { <tr><td colspan="6"><div class="fb-empty"><div class="fb-empty-icon">👤</div><h3>No users yet</h3></div></td></tr> }
-        @for (u of users; track u.id) {
+        @if (loading) { <tr><td colspan="5" class="text-muted" style="padding:24px;text-align:center">Loading…</td></tr> }
+        @if (!loading && page?.content?.length === 0) { <tr><td colspan="5"><div class="fb-empty"><div class="fb-empty-icon">👤</div><h3>No users yet</h3></div></td></tr> }
+        @for (u of page?.content ?? []; track u.id) {
           <tr>
-            <td class="fw-600">{{ u.firstName }} {{ u.lastName }}</td>
+            <td class="fw-600">{{ u.firstName | personName:u.lastName }}</td>
             <td class="text-muted">{{ u.email }}</td>
             <td><span [class]="'fb-badge ' + (u.role==='ADMIN' ? 'fb-badge-navy' : u.role==='MANAGER' ? 'fb-badge-sage' : 'fb-badge-employee')">{{ u.role }}</span></td>
-            <td class="text-muted">{{ u.department || '—' }}</td>
             <td><span [class]="'fb-badge ' + (u.active ? 'fb-badge-active' : 'fb-badge-inactive')">{{ u.active ? 'Active' : 'Inactive' }}</span></td>
             <td></td>
           </tr>
@@ -60,4 +90,8 @@
       </tbody>
     </table>
   </div>
+  @if ((page?.totalPages ?? 0) > 1) {
+    <div class="fb-pagination">@for (p of pages; track p) { <button [class]="'fb-page-btn' + (p===currentPage ? ' active' : '')" (click)="goToPage(p)">{{ p + 1 }}</button> }</div>
+    <p class="text-muted fb-text-sm text-center">Showing {{ page?.size }} of {{ page?.totalElements }} accounts</p>
+  }
 </div>

@@ -2,15 +2,18 @@ package com.feedback.feedback360.controllers;
 
 import com.feedback.feedback360.dto.UserRequestDTO;
 import com.feedback.feedback360.dto.UserResponseDTO;
+import com.feedback.feedback360.enums.Role;
 import com.feedback.feedback360.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/users")
@@ -21,11 +24,19 @@ public class AdminUserController {
     private final UserService userService;
 
     @GetMapping
-    @Operation(summary = "List all users")
-    public List<UserResponseDTO> list() {
-        return userService.listAll().stream()
-                .map(UserResponseDTO::from)
-                .toList();
+    @Operation(summary = "List users, filterable by name/email and role, paginated with page size of 10, 20 or 50")
+    public Page<UserResponseDTO> list(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Role role,
+            @RequestParam(required = false) Boolean active,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int pageSize) {
+
+        int safePageSize = (pageSize == 10 || pageSize == 20 || pageSize == 50) ? pageSize : 10;
+
+        return userService.search(search, role, active,
+                        PageRequest.of(page, safePageSize, Sort.by(Sort.Direction.ASC, "lastName")))
+                .map(UserResponseDTO::from);
     }
 
     @GetMapping("/{id}")

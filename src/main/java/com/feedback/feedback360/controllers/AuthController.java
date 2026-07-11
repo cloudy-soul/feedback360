@@ -59,7 +59,7 @@ public class AuthController {
         return ResponseEntity.ok(Map.of(
                 "role", user.getRole().name(),
                 "userId", user.getId().toString(),
-                "fullName", user.getFirstName() + " " + user.getLastName()
+                "fullName", com.feedback.feedback360.util.NameFormatter.display(user.getFirstName(), user.getLastName())
         ));
     }
 
