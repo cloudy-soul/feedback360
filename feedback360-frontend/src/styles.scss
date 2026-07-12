@@ -83,6 +83,14 @@ body {
 .fb-navbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 .fb-navbar-user { color: rgba(255,255,255,0.7); font-size: 13px; }
 .fb-navbar-logout { color: rgba(255,255,255,0.8) !important; border-color: rgba(255,255,255,0.3) !important; }
+.fb-lang-switch { display: flex; border: 1.5px solid rgba(255,255,255,0.3); border-radius: var(--radius-sm); overflow: hidden; }
+.fb-lang-btn {
+  border: none; background: transparent; color: rgba(255,255,255,0.7);
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.5px;
+  padding: 5px 10px; cursor: pointer; transition: all 0.15s; font-family: inherit;
+}
+.fb-lang-btn.active { background: var(--sage); color: var(--white); }
+.fb-lang-btn:not(.active):hover { background: rgba(255,255,255,0.1); color: var(--white); }
 
 /* ─── PAGE ────────────────────────────────── */
 .fb-page { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }

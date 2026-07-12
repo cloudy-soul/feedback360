@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, TranslateModule],
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
@@ -16,7 +17,7 @@ export class LoginComponent {
   loading = false;
   private returnUrl: string;
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router, private route: ActivatedRoute, private translate: TranslateService) {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '';
     if (this.auth.isAuthenticated()) this.auth.redirectByRole(this.returnUrl);
     this.form = this.fb.group({
@@ -31,7 +32,7 @@ export class LoginComponent {
     const { email, password } = this.form.value;
     this.auth.login(email, password).subscribe({
       next: () => { this.loading = false; this.auth.redirectByRole(this.returnUrl || undefined); },
-      error: () => { this.loading = false; this.error = 'Invalid email or password.'; }
+      error: () => { this.loading = false; this.error = this.translate.instant('login.invalidCredentials'); }
     });
   }
 }

@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdminService } from '../../../core/services/admin.service';
 import { User, UserRequest, Role } from '../../../core/models/user.model';
 import { Page } from '../../../core/models/integration-log.model';
 import { PersonNamePipe } from '../../../core/pipes/person-name.pipe';
 
-@Component({ selector: 'app-users', standalone: true, imports: [CommonModule, ReactiveFormsModule, FormsModule, PersonNamePipe], templateUrl: './users.component.html' })
+@Component({ selector: 'app-users', standalone: true, imports: [CommonModule, ReactiveFormsModule, FormsModule, PersonNamePipe, TranslateModule], templateUrl: './users.component.html' })
 export class UsersComponent implements OnInit {
   page: Page<User> | null = null; loading = false;
   roles: Role[] = ['ADMIN','MANAGER','EMPLOYEE'];
@@ -17,7 +18,7 @@ export class UsersComponent implements OnInit {
   search = ''; roleFilter = '';
   currentPage = 0; pageSize = 10; pageSizeOptions = [10, 20, 50];
 
-  constructor(private admin: AdminService, private fb: FormBuilder) {
+  constructor(private admin: AdminService, private fb: FormBuilder, private translate: TranslateService) {
     this.form = this.fb.group({ firstName:['',Validators.required], lastName:['',Validators.required], email:['', [Validators.required,Validators.email]], password:[''], role:['EMPLOYEE',Validators.required], department:[''] });
   }
 
@@ -61,10 +62,17 @@ export class UsersComponent implements OnInit {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     const body = this.form.getRawValue() as UserRequest;
     const action = this.editingId ? this.admin.updateUser(this.editingId, body) : this.admin.createUser(body);
-    action.subscribe({ next: () => { this.showForm = false; this.success = this.editingId ? 'User updated.' : 'User created.'; this.load(); setTimeout(()=>this.success=null,3000); }, error: err => this.formError = err.error?.message||'An error occurred.' });
+    action.subscribe({
+      next: () => {
+        this.showForm = false;
+        this.success = this.translate.instant(this.editingId ? 'adminUsers.userUpdated' : 'adminUsers.userCreated');
+        this.load(); setTimeout(()=>this.success=null,3000);
+      },
+      error: err => this.formError = err.error?.message || this.translate.instant('common.errorOccurred')
+    });
   }
 
-  deactivate(id: number): void { if (!confirm('Deactivate this user?')) return; this.admin.deactivateUser(id).subscribe(()=>this.load()); }
+  deactivate(id: number): void { if (!confirm(this.translate.instant('adminUsers.confirmDeactivate'))) return; this.admin.deactivateUser(id).subscribe(()=>this.load()); }
   activate(id: number): void { this.admin.activateUser(id).subscribe(()=>this.load()); }
   cancel(): void { this.showForm = false; }
 }

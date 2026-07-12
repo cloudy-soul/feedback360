@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { FeedbackService } from '../../../core/services/feedback.service';
 import { FeedbackSummary } from '../../../core/models/feedback.model';
 import { AuthService } from '../../../core/services/auth.service';
 
-@Component({ selector: 'app-my-modules', standalone: true, imports: [CommonModule, FormsModule, RouterLink], templateUrl: './my-modules.component.html' })
+@Component({ selector: 'app-my-modules', standalone: true, imports: [CommonModule, FormsModule, RouterLink, TranslateModule], templateUrl: './my-modules.component.html' })
 export class MyModulesComponent implements OnInit {
   allModules: FeedbackSummary[] = []; modules: FeedbackSummary[] = []; loading = true;
   search = ''; category = ''; status = '';

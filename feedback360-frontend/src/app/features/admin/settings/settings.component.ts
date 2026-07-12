@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../../core/services/admin.service';
 
-@Component({ selector: 'app-settings', standalone: true, imports: [CommonModule, ReactiveFormsModule], templateUrl: './settings.component.html' })
+@Component({ selector: 'app-settings', standalone: true, imports: [CommonModule, ReactiveFormsModule, TranslateModule], templateUrl: './settings.component.html' })
 export class SettingsComponent implements OnInit {
   form: FormGroup; success = false;
   constructor(private admin: AdminService, private fb: FormBuilder) {

@@ -2,18 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FeedbackService } from '../../../core/services/feedback.service';
 import { FeedbackBrowse } from '../../../core/models/feedback.model';
 import { Page } from '../../../core/models/integration-log.model';
 
-@Component({ selector: 'app-feedbacks', standalone: true, imports: [CommonModule, FormsModule, RouterLink], templateUrl: './feedbacks.component.html' })
+@Component({ selector: 'app-feedbacks', standalone: true, imports: [CommonModule, FormsModule, RouterLink, TranslateModule], templateUrl: './feedbacks.component.html' })
 export class FeedbacksComponent implements OnInit {
   page: Page<FeedbackBrowse> | null = null; currentPage = 0; loading = false;
   module=''; department=''; dateFrom=''; dateTo=''; minRating=''; status='';
   pageSize = 20; pageSizeOptions = [10, 20, 50];
   reminderMessage: string | null = null;
 
-  constructor(private svc: FeedbackService) {}
+  constructor(private svc: FeedbackService, private translate: TranslateService) {}
   ngOnInit(): void {
     const saved = localStorage.getItem('feedbacks_pageSize');
     if (saved) this.pageSize = Number(saved);
@@ -35,7 +36,7 @@ export class FeedbacksComponent implements OnInit {
 
   sendRemindersNow(): void {
     this.svc.sendRemindersNow().subscribe(() => {
-      this.reminderMessage = 'Reminders triggered — check the admin logs for details.';
+      this.reminderMessage = this.translate.instant('managerFeedbacks.reminderSuccess');
       setTimeout(() => this.reminderMessage = null, 4000);
     });
   }

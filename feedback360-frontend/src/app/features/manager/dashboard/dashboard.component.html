@@ -1,25 +1,25 @@
 <div class="fb-page">
-  <div class="fb-page-header"><div><h1 class="fb-page-title">Dashboard</h1><p class="fb-page-subtitle">Training feedback overview</p></div></div>
-  @if (loading) { <div class="fb-empty"><h3>Loading…</h3></div> }
+  <div class="fb-page-header"><div><h1 class="fb-page-title">{{ 'managerDashboard.title' | translate }}</h1><p class="fb-page-subtitle">{{ 'managerDashboard.subtitle' | translate }}</p></div></div>
+  @if (loading) { <div class="fb-empty"><h3>{{ 'common.loading' | translate }}</h3></div> }
   @if (data) {
     <div class="fb-kpi-grid">
-      <div class="fb-kpi"><div class="fb-kpi-label">Response Rate</div><div class="fb-kpi-value">{{ data.responseRatePercent }}%</div></div>
-      <div class="fb-kpi"><div class="fb-kpi-label">Avg Rating</div><div class="fb-kpi-value">{{ data.averageRatingOverall }}/10</div></div>
-      <div class="fb-kpi"><div class="fb-kpi-label">Submitted</div><div class="fb-kpi-value">{{ data.totalSubmitted }}</div></div>
-      <div class="fb-kpi fb-kpi-warning"><div class="fb-kpi-label">Pending</div><div class="fb-kpi-value">{{ data.pendingCount }}</div></div>
+      <div class="fb-kpi"><div class="fb-kpi-label">{{ 'managerDashboard.responseRate' | translate }}</div><div class="fb-kpi-value">{{ data.responseRatePercent }}%</div></div>
+      <div class="fb-kpi"><div class="fb-kpi-label">{{ 'managerDashboard.avgRating' | translate }}</div><div class="fb-kpi-value">{{ data.averageRatingOverall }}/10</div></div>
+      <div class="fb-kpi"><div class="fb-kpi-label">{{ 'common.submitted' | translate }}</div><div class="fb-kpi-value">{{ data.totalSubmitted }}</div></div>
+      <div class="fb-kpi fb-kpi-warning"><div class="fb-kpi-label">{{ 'common.pending' | translate }}</div><div class="fb-kpi-value">{{ data.pendingCount }}</div></div>
     </div>
     <div class="fb-charts-grid">
       <div class="fb-chart-card">
-        <div class="fb-chart-title">Submitted vs Pending</div>
+        <div class="fb-chart-title">{{ 'managerDashboard.submittedVsPending' | translate }}</div>
         <svg viewBox="0 0 220 220" class="w-100" style="max-width: 220px; margin: 0 auto; display: block;">
           <circle cx="110" cy="110" r="80" fill="none" stroke="#e9ecef" stroke-width="24"></circle>
           <circle cx="110" cy="110" r="80" fill="none" stroke="#27795A" stroke-width="24" stroke-dasharray="502.4" [attr.stroke-dashoffset]="pieValues[0] ? 502.4 - (pieValues[0] / (pieValues[0] + pieValues[1])) * 502.4 : 502.4" transform="rotate(-90 110 110)"></circle>
           <circle cx="110" cy="110" r="80" fill="none" stroke="#B7770D" stroke-width="24" stroke-dasharray="502.4" [attr.stroke-dashoffset]="pieValues[1] ? 502.4 - (pieValues[1] / (pieValues[0] + pieValues[1])) * 502.4 : 502.4" transform="rotate(-90 110 110)"></circle>
         </svg>
-        <div class="text-center mt-2"><small>{{ pieValues[0] }} submitted / {{ pieValues[1] }} pending</small></div>
+        <div class="text-center mt-2"><small>{{ 'managerDashboard.submittedPendingCaption' | translate:{ submitted: pieValues[0], pending: pieValues[1] } }}</small></div>
       </div>
       <div class="fb-chart-card">
-        <div class="fb-chart-title">Feedback by Department</div>
+        <div class="fb-chart-title">{{ 'managerDashboard.byDepartment' | translate }}</div>
         <ul class="mb-0 ps-3">
           @for (label of departmentLabels; track label) {
             <li><strong>{{ label }}</strong>: {{ departmentValues[$index] }}</li>
@@ -29,7 +29,7 @@
     </div>
     <div class="fb-charts-grid">
       <div class="fb-chart-card">
-        <div class="fb-chart-title">Rating Trend (by month)</div>
+        <div class="fb-chart-title">{{ 'managerDashboard.ratingTrend' | translate }}</div>
         <ul class="mb-0 ps-3">
           @for (label of trendLabels; track label) {
             <li><strong>{{ label }}</strong>: {{ trendValues[$index] }}/10</li>
@@ -37,7 +37,7 @@
         </ul>
       </div>
       <div class="fb-chart-card">
-        <div class="fb-chart-title">Top 5 Modules by Rating</div>
+        <div class="fb-chart-title">{{ 'managerDashboard.top5Modules' | translate }}</div>
         <ul class="mb-0 ps-3">
           @for (label of moduleLabels; track label) {
             <li><strong>{{ label }}</strong>: {{ moduleValues[$index] }}/10</li>
@@ -47,14 +47,14 @@
     </div>
     <div class="fb-two-col-grid">
       <div class="fb-table-wrap">
-        <div class="fb-table-wrap-title">Top Rated</div>
-        <table class="fb-table"><thead><tr><th>Module</th><th>Avg</th><th>Responses</th></tr></thead>
+        <div class="fb-table-wrap-title">{{ 'managerDashboard.topRated' | translate }}</div>
+        <table class="fb-table"><thead><tr><th>{{ 'common.module' | translate }}</th><th>{{ 'managerDashboard.avg' | translate }}</th><th>{{ 'managerDashboard.responses' | translate }}</th></tr></thead>
           <tbody>@for (m of data.topModules; track m.title) { <tr><td class="fw-500">{{ m.title }}</td><td><span class="fb-badge fb-badge-rating">{{ m.avgRating }}</span></td><td class="text-muted">{{ m.responses }}</td></tr> }</tbody>
         </table>
       </div>
       <div class="fb-table-wrap">
-        <div class="fb-table-wrap-title">Lowest Rated</div>
-        <table class="fb-table"><thead><tr><th>Module</th><th>Avg</th><th>Responses</th></tr></thead>
+        <div class="fb-table-wrap-title">{{ 'managerDashboard.lowestRated' | translate }}</div>
+        <table class="fb-table"><thead><tr><th>{{ 'common.module' | translate }}</th><th>{{ 'managerDashboard.avg' | translate }}</th><th>{{ 'managerDashboard.responses' | translate }}</th></tr></thead>
           <tbody>@for (m of data.bottomModules; track m.title) { <tr><td class="fw-500">{{ m.title }}</td><td><span class="fb-badge fb-badge-danger">{{ m.avgRating }}</span></td><td class="text-muted">{{ m.responses }}</td></tr> }</tbody>
         </table>
       </div>

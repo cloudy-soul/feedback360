@@ -1,89 +1,85 @@
 <div class="fb-page">
 
   <div class="fb-page-header">
-    <div><h1 class="fb-page-title">Users</h1>
-        <p class="fb-page-subtitle">
-          {{ page?.totalElements ?? 0 }}
-          {{ (page?.totalElements ?? 0) === 1 ? 'account' : 'accounts' }}
-          registered
-        </p>
+    <div><h1 class="fb-page-title">{{ 'adminUsers.title' | translate }}</h1>
+        <p class="fb-page-subtitle">{{ 'adminUsers.accountsRegistered' | translate:{ count: page?.totalElements ?? 0 } }}</p>
         </div>
-    <button class="fb-btn fb-btn-primary" (click)="openCreate()"><i class="bi bi-plus-lg"></i> New User</button>
+    <button class="fb-btn fb-btn-primary" (click)="openCreate()"><i class="bi bi-plus-lg"></i> {{ 'adminUsers.newUser' | translate }}</button>
   </div>
   @if (success) { <div class="fb-alert fb-alert-success"><i class="bi bi-check-circle-fill"></i> {{ success }}</div> }
   @if (showForm) {
     <div class="fb-card">
-      <h3 class="fb-card-title">{{ editingId ? 'Edit User' : 'New User' }}</h3>
+      <h3 class="fb-card-title">{{ (editingId ? 'adminUsers.editUser' : 'adminUsers.newUser') | translate }}</h3>
       @if (formError) { <div class="fb-alert fb-alert-error"><i class="bi bi-exclamation-circle-fill"></i> {{ formError }}</div> }
       <form [formGroup]="form" (ngSubmit)="save()">
         <div class="fb-form-row">
           <div class="fb-form-group mb-0">
-            <label class="fb-label">First name *</label>
+            <label class="fb-label">{{ 'adminUsers.firstName' | translate }} *</label>
             <input type="text" formControlName="firstName" class="fb-input" [class.fb-input-invalid]="isInvalid('firstName')">
-            @if (isInvalid('firstName')) { <small class="fb-field-error">First name is required.</small> }
+            @if (isInvalid('firstName')) { <small class="fb-field-error">{{ 'adminUsers.firstNameRequired' | translate }}</small> }
           </div>
           <div class="fb-form-group mb-0">
-            <label class="fb-label">Last name *</label>
+            <label class="fb-label">{{ 'adminUsers.lastName' | translate }} *</label>
             <input type="text" formControlName="lastName" class="fb-input" [class.fb-input-invalid]="isInvalid('lastName')">
-            @if (isInvalid('lastName')) { <small class="fb-field-error">Last name is required.</small> }
+            @if (isInvalid('lastName')) { <small class="fb-field-error">{{ 'adminUsers.lastNameRequired' | translate }}</small> }
           </div>
         </div>
         <div class="fb-form-group mt-16">
-          <label class="fb-label">Email *</label>
+          <label class="fb-label">{{ 'common.email' | translate }} *</label>
           <input type="email" formControlName="email" class="fb-input" [class.fb-input-readonly]="editingId !== null" [class.fb-input-invalid]="isInvalid('email')">
-          @if (editingId) { <small class="fb-hint">🔒 Email cannot be changed — it is the TalentUp sync key.</small> }
-          @if (isInvalid('email')) { <small class="fb-field-error">A valid email is required.</small> }
+          @if (editingId) { <small class="fb-hint">{{ 'adminUsers.emailLockedHint' | translate }}</small> }
+          @if (isInvalid('email')) { <small class="fb-field-error">{{ 'adminUsers.emailRequired' | translate }}</small> }
         </div>
         <div class="fb-form-group">
-          <label class="fb-label">{{ editingId ? 'Password (leave blank to keep current)' : 'Password *' }}</label>
+          <label class="fb-label">{{ (editingId ? 'adminUsers.passwordEditHint' : 'adminUsers.password') | translate }}{{ editingId ? '' : ' *' }}</label>
           <input type="password" formControlName="password" class="fb-input" placeholder="••••••••" [class.fb-input-invalid]="isInvalid('password')">
-          @if (isInvalid('password')) { <small class="fb-field-error">Password is required.</small> }
+          @if (isInvalid('password')) { <small class="fb-field-error">{{ 'adminUsers.passwordRequired' | translate }}</small> }
         </div>
         <div class="fb-form-row">
           <div class="fb-form-group mb-0">
-            <label class="fb-label">Role *</label>
+            <label class="fb-label">{{ 'common.role' | translate }} *</label>
             <select formControlName="role" class="fb-select" [class.fb-input-invalid]="isInvalid('role')">@for (r of roles; track r) { <option [value]="r">{{ r }}</option> }</select>
           </div>
-          <div class="fb-form-group mb-0"><label class="fb-label">Department</label><input type="text" formControlName="department" class="fb-input"></div>
+          <div class="fb-form-group mb-0"><label class="fb-label">{{ 'adminUsers.department' | translate }}</label><input type="text" formControlName="department" class="fb-input"></div>
         </div>
         <div class="fb-form-actions">
-          <button type="submit" class="fb-btn fb-btn-primary">{{ editingId ? 'Save changes' : 'Create user' }}</button>
-          <button type="button" class="fb-btn fb-btn-outline" (click)="cancel()">Cancel</button>
+          <button type="submit" class="fb-btn fb-btn-primary">{{ (editingId ? 'common.saveChanges' : 'adminUsers.createUser') | translate }}</button>
+          <button type="button" class="fb-btn fb-btn-outline" (click)="cancel()">{{ 'common.cancel' | translate }}</button>
         </div>
       </form>
     </div>
   }
 
   <div class="fb-filter-bar">
-    <div class="fb-filter-group"><label>Search</label><input [(ngModel)]="search" class="fb-input" placeholder="Name or email…"></div>
-    <div class="fb-filter-group"><label>Role</label>
+    <div class="fb-filter-group"><label>{{ 'adminUsers.search' | translate }}</label><input [(ngModel)]="search" class="fb-input" [placeholder]="'adminUsers.searchPlaceholder' | translate"></div>
+    <div class="fb-filter-group"><label>{{ 'common.role' | translate }}</label>
       <select [(ngModel)]="roleFilter" class="fb-select">
-        <option value="">Any</option>@for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+        <option value="">{{ 'common.any' | translate }}</option>@for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
       </select>
     </div>
-    <div class="fb-filter-group"><label>Show</label>
+    <div class="fb-filter-group"><label>{{ 'common.show' | translate }}</label>
       <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" class="fb-select">
-        @for (s of pageSizeOptions; track s) { <option [value]="s">{{ s }} per page</option> }
+        @for (s of pageSizeOptions; track s) { <option [value]="s">{{ 'common.perPage' | translate:{ count: s } }}</option> }
       </select>
     </div>
     <div class="fb-filter-actions">
-      <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> Filter</button>
-      <button class="fb-btn fb-btn-outline" (click)="clearFilter()">Clear</button>
+      <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> {{ 'common.filter' | translate }}</button>
+      <button class="fb-btn fb-btn-outline" (click)="clearFilter()">{{ 'common.clear' | translate }}</button>
     </div>
   </div>
 
   <div class="fb-table-wrap">
     <table class="fb-table">
-      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th class="text-right"></th></tr></thead>
+      <thead><tr><th>{{ 'common.name' | translate }}</th><th>{{ 'common.email' | translate }}</th><th>{{ 'common.role' | translate }}</th><th>{{ 'common.status' | translate }}</th><th class="text-right"></th></tr></thead>
       <tbody>
-        @if (loading) { <tr><td colspan="5" class="text-muted" style="padding:24px;text-align:center">Loading…</td></tr> }
-        @if (!loading && page?.content?.length === 0) { <tr><td colspan="5"><div class="fb-empty"><div class="fb-empty-icon">👤</div><h3>No users yet</h3></div></td></tr> }
+        @if (loading) { <tr><td colspan="5" class="text-muted" style="padding:24px;text-align:center">{{ 'common.loading' | translate }}</td></tr> }
+        @if (!loading && page?.content?.length === 0) { <tr><td colspan="5"><div class="fb-empty"><div class="fb-empty-icon">👤</div><h3>{{ 'adminUsers.emptyTitle' | translate }}</h3></div></td></tr> }
         @for (u of page?.content ?? []; track u.id) {
           <tr>
             <td class="fw-600">{{ u.firstName | personName:u.lastName }}</td>
             <td class="text-muted">{{ u.email }}</td>
             <td><span [class]="'fb-badge ' + (u.role==='ADMIN' ? 'fb-badge-navy' : u.role==='MANAGER' ? 'fb-badge-sage' : 'fb-badge-employee')">{{ u.role }}</span></td>
-            <td><span [class]="'fb-badge ' + (u.active ? 'fb-badge-active' : 'fb-badge-inactive')">{{ u.active ? 'Active' : 'Inactive' }}</span></td>
+            <td><span [class]="'fb-badge ' + (u.active ? 'fb-badge-active' : 'fb-badge-inactive')">{{ (u.active ? 'common.active' : 'common.inactive') | translate }}</span></td>
             <td></td>
           </tr>
         }
@@ -92,6 +88,6 @@
   </div>
   @if ((page?.totalPages ?? 0) > 1) {
     <div class="fb-pagination">@for (p of pages; track p) { <button [class]="'fb-page-btn' + (p===currentPage ? ' active' : '')" (click)="goToPage(p)">{{ p + 1 }}</button> }</div>
-    <p class="text-muted fb-text-sm text-center">Showing {{ page?.size }} of {{ page?.totalElements }} accounts</p>
+    <p class="text-muted fb-text-sm text-center">{{ 'adminUsers.showingAccounts' | translate:{ size: page?.size, total: page?.totalElements } }}</p>
   }
 </div>

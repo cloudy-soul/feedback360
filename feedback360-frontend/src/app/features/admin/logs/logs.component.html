@@ -1,33 +1,33 @@
 <div class="fb-page">
   <div class="fb-page-header">
-    <div><h1 class="fb-page-title">Integration Logs</h1><p class="fb-page-subtitle">Audit trail for all TalentUp sync events and notifications</p></div>
-    <button class="fb-btn fb-btn-navy" (click)="syncNow()"><i class="bi bi-arrow-repeat"></i> Sync Now</button>
+    <div><h1 class="fb-page-title">{{ 'adminLogs.title' | translate }}</h1><p class="fb-page-subtitle">{{ 'adminLogs.subtitle' | translate }}</p></div>
+    <button class="fb-btn fb-btn-navy" (click)="syncNow()"><i class="bi bi-arrow-repeat"></i> {{ 'adminLogs.syncNow' | translate }}</button>
   </div>
   @if (syncMessage) { <div class="fb-alert fb-alert-success"><i class="bi bi-check-circle-fill"></i> {{ syncMessage }}</div> }
   <div class="fb-filter-bar">
-    <div class="fb-filter-group"><label>Type</label><input [(ngModel)]="filterType" class="fb-input" placeholder="POLL_RUN…"></div>
-    <div class="fb-filter-group"><label>Status</label>
+    <div class="fb-filter-group"><label>{{ 'adminLogs.type' | translate }}</label><input [(ngModel)]="filterType" class="fb-input" [placeholder]="'adminLogs.typePlaceholder' | translate"></div>
+    <div class="fb-filter-group"><label>{{ 'common.status' | translate }}</label>
       <select [(ngModel)]="filterStatus" class="fb-select">
-        <option value="">Any</option><option value="SUCCESS">SUCCESS</option><option value="FAILED">FAILED</option>
+        <option value="">{{ 'common.any' | translate }}</option><option value="SUCCESS">SUCCESS</option><option value="FAILED">FAILED</option>
       </select>
     </div>
-    <div class="fb-filter-group"><label>Since</label><input type="date" [(ngModel)]="filterSince" class="fb-input"></div>
-    <div class="fb-filter-group"><label>Show</label>
+    <div class="fb-filter-group"><label>{{ 'adminLogs.since' | translate }}</label><input type="date" [(ngModel)]="filterSince" class="fb-input"></div>
+    <div class="fb-filter-group"><label>{{ 'common.show' | translate }}</label>
       <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" class="fb-select">
-        @for (s of pageSizeOptions; track s) { <option [value]="s">{{ s }} per page</option> }
+        @for (s of pageSizeOptions; track s) { <option [value]="s">{{ 'common.perPage' | translate:{ count: s } }}</option> }
       </select>
     </div>
     <div class="fb-filter-actions">
-      <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> Filter</button>
-      <button class="fb-btn fb-btn-outline" (click)="clearFilter()">Clear</button>
+      <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> {{ 'common.filter' | translate }}</button>
+      <button class="fb-btn fb-btn-outline" (click)="clearFilter()">{{ 'common.clear' | translate }}</button>
     </div>
   </div>
   <div class="fb-table-wrap">
     <table class="fb-table">
-      <thead><tr><th class="fb-col-time">Time</th><th>Type</th><th class="fb-col-status">Status</th><th>Message</th></tr></thead>
+      <thead><tr><th class="fb-col-time">{{ 'common.time' | translate }}</th><th>{{ 'adminLogs.type' | translate }}</th><th class="fb-col-status">{{ 'common.status' | translate }}</th><th>{{ 'adminLogs.message' | translate }}</th></tr></thead>
       <tbody>
-        @if (loading) { <tr><td colspan="4" class="text-muted" style="padding:24px;text-align:center">Loading…</td></tr> }
-        @if (!loading && page?.content?.length === 0) { <tr><td colspan="4"><div class="fb-empty"><div class="fb-empty-icon">📋</div><h3>No logs yet</h3><p>Trigger a sync to see the first entries.</p></div></td></tr> }
+        @if (loading) { <tr><td colspan="4" class="text-muted" style="padding:24px;text-align:center">{{ 'common.loading' | translate }}</td></tr> }
+        @if (!loading && page?.content?.length === 0) { <tr><td colspan="4"><div class="fb-empty"><div class="fb-empty-icon">📋</div><h3>{{ 'adminLogs.emptyTitle' | translate }}</h3><p>{{ 'adminLogs.emptyText' | translate }}</p></div></td></tr> }
         @for (l of page?.content ?? []; track l.id) {
           <tr>
             <td class="text-muted fb-text-xs">{{ l.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
@@ -45,6 +45,6 @@
         <button [class]="'fb-page-btn' + (p === currentPage ? ' active' : '')" (click)="goToPage(p)">{{ p + 1 }}</button>
       }
     </div>
-    <p class="text-muted fb-text-sm text-center">Showing {{ page?.size }} of {{ page?.totalElements }} entries</p>
+    <p class="text-muted fb-text-sm text-center">{{ 'common.showingEntries' | translate:{ size: page?.size, total: page?.totalElements } }}</p>
   }
 </div>
