@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { Dashboard } from '../../../core/models/dashboard.model';
 
-@Component({ selector: 'app-dashboard', standalone: true, imports: [CommonModule], templateUrl: './dashboard.component.html' })
+@Component({ selector: 'app-dashboard', standalone: true, imports: [CommonModule, TranslateModule], templateUrl: './dashboard.component.html' })
 export class DashboardComponent implements OnInit {
   data: Dashboard | null = null;
   loading = true;
