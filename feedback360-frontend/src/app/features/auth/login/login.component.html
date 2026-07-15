@@ -1,0 +1,49 @@
+<div class="fb-login-page">
+  <div class="fb-login-hero">
+    <div class="fb-login-logo">
+      <img src="/assets/capLogo.png" alt="Capgemini logo" class="fb-brand-logo" />
+      <div class="fb-brand-divider-lg"></div>
+      <span class="app-name">FeedBack360</span>
+    </div>
+    <h1>{{ 'login.title' | translate }}</h1>
+    <p class="fb-login-subtitle">{{ 'login.subtitle' | translate }}</p>
+  </div>
+  <div class="fb-login-bottom">
+    <div class="fb-login-card">
+      @if (error) {
+        <div class="fb-alert fb-alert-error">
+          <i class="bi bi-exclamation-circle-fill"></i> {{ error }}
+        </div>
+      }
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="fb-form-group">
+          <label class="fb-label">{{ 'login.email' | translate }}</label>
+          <div class="fb-input-icon-wrap">
+            <i class="bi bi-person icon"></i>
+            <input type="email" formControlName="email" class="fb-input" [placeholder]="'login.emailPlaceholder' | translate">
+          </div>
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <small class="fb-field-error">{{ 'login.emailError' | translate }}</small>
+          }
+        </div>
+        <div class="fb-form-group">
+          <label class="fb-label">{{ 'login.password' | translate }}</label>
+          <div class="fb-input-icon-wrap">
+            <input type="password" formControlName="password" class="fb-input icon-right-padded" placeholder="••••••••">
+            <i class="bi bi-lock icon icon-right"></i>
+          </div>
+        </div>
+        <button type="submit" class="fb-btn fb-btn-primary fb-login-submit" [disabled]="loading">
+          {{ (loading ? 'login.loggingIn' : 'login.submit') | translate }}
+        </button>
+      </form>
+    </div>
+    <div class="fb-login-help">
+      <i class="bi bi-person-circle fb-login-help-icon"></i>
+      <div>
+        <h3>{{ 'login.helpTitle' | translate }}</h3>
+        <p>{{ 'login.helpText' | translate }}</p>
+      </div>
+    </div>
+  </div>
+</div>

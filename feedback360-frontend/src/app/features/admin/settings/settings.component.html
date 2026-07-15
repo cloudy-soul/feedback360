@@ -1,0 +1,41 @@
+<div class="fb-page fb-page-narrow">
+  <div class="fb-page-header">
+    <div>
+      <h1 class="fb-page-title">{{ 'adminSettings.title' | translate }}</h1>
+      <p class="fb-page-subtitle">{{ 'adminSettings.subtitle' | translate }}</p>
+    </div>
+  </div>
+
+  @if (success) {
+    <div class="fb-alert fb-alert-success">
+      <i class="bi bi-check-circle-fill"></i> {{ 'adminSettings.saved' | translate }}
+    </div>
+  }
+
+  <div class="fb-card">
+    <h3 class="fb-card-title"><i class="bi bi-bell"></i> {{ 'adminSettings.reminderSettings' | translate }}</h3>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="fb-form-group">
+        <label class="fb-label">{{ 'adminSettings.reminderDelayLabel' | translate }}</label>
+        <input type="number" formControlName="reminderDelayDays" class="fb-input fb-field-narrow" min="1" max="30">
+        <small class="fb-hint">{{ 'adminSettings.reminderDelayHint' | translate }}</small>
+      </div>
+      <div class="fb-form-group">
+        <label class="fb-label">{{ 'adminSettings.templateLabel' | translate }}</label>
+        <textarea formControlName="reminderTemplate" class="fb-textarea" rows="4"></textarea>
+        <small class="fb-hint">{{ 'adminSettings.templateHintPrefix' | translate }} <code class="fb-code-chip">{{ '{' }}moduleTitle{{ '}' }}</code> {{ 'adminSettings.templateHintSuffix' | translate }}</small>
+      </div>
+      <button type="submit" class="fb-btn fb-btn-primary">
+        <i class="bi bi-floppy"></i> {{ 'adminSettings.saveSettings' | translate }}
+      </button>
+    </form>
+  </div>
+
+  <div class="fb-card">
+    <h3 class="fb-card-title"><i class="bi bi-arrow-repeat"></i> {{ 'adminSettings.talentupSync' | translate }}</h3>
+    <p class="text-muted fb-text-sm" style="margin-bottom:16px">{{ 'adminSettings.syncDescription' | translate }}</p>
+    <button class="fb-btn fb-btn-navy" (click)="syncNow()">
+      <i class="bi bi-play-fill"></i> {{ 'adminSettings.triggerSyncNow' | translate }}
+    </button>
+  </div>
+</div>

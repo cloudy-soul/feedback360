@@ -1,0 +1,57 @@
+<div class="fb-page">
+  <div class="fb-page-header">
+    <div><h1 class="fb-page-title">{{ 'managerFeedbacks.title' | translate }}</h1><p class="fb-page-subtitle">{{ 'managerFeedbacks.subtitle' | translate }}</p></div>
+    <div class="fb-header-actions">
+      <button class="fb-btn fb-btn-navy" (click)="sendRemindersNow()"><i class="bi bi-bell-fill"></i> {{ 'managerFeedbacks.sendReminders' | translate }}</button>
+      <button class="fb-btn fb-btn-outline" (click)="exportCsv()"><i class="bi bi-download"></i> {{ 'managerFeedbacks.exportCsv' | translate }}</button>
+    </div>
+  </div>
+  @if (reminderMessage) { <div class="fb-alert fb-alert-success"><i class="bi bi-check-circle-fill"></i> {{ reminderMessage }}</div> }
+  <div class="fb-filter-bar">
+    <div class="fb-filter-group"><label>{{ 'common.module' | translate }}</label><input [(ngModel)]="module" class="fb-input" [placeholder]="'managerFeedbacks.modulePlaceholder' | translate"></div>
+    <div class="fb-filter-group"><label>{{ 'managerFeedbacks.department' | translate }}</label><input [(ngModel)]="department" class="fb-input" [placeholder]="'managerFeedbacks.departmentPlaceholder' | translate"></div>
+    <div class="fb-filter-group"><label>{{ 'common.from' | translate }}</label><input type="date" [(ngModel)]="dateFrom" class="fb-input"></div>
+    <div class="fb-filter-group"><label>{{ 'common.to' | translate }}</label><input type="date" [(ngModel)]="dateTo" class="fb-input"></div>
+    <div class="fb-filter-group"><label>{{ 'managerFeedbacks.minRating' | translate }}</label><input type="number" [(ngModel)]="minRating" class="fb-input fb-field-xnarrow" min="0" max="10"></div>
+    <div class="fb-filter-group"><label>{{ 'common.status' | translate }}</label>
+      <select [(ngModel)]="status" class="fb-select">
+        <option value="">{{ 'common.any' | translate }}</option><option value="NOT_SUBMITTED">{{ 'common.pending' | translate }}</option><option value="SUBMITTED">{{ 'common.submitted' | translate }}</option>
+      </select>
+    </div>
+    <div class="fb-filter-group"><label>{{ 'common.show' | translate }}</label>
+      <select [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" class="fb-select">
+        @for (s of pageSizeOptions; track s) { <option [value]="s">{{ 'common.perPage' | translate:{ count: s } }}</option> }
+      </select>
+    </div>
+    <div class="fb-filter-actions">
+      <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> {{ 'common.filter' | translate }}</button>
+      <button class="fb-btn fb-btn-outline" (click)="clearFilter()">{{ 'common.clear' | translate }}</button>
+    </div>
+  </div>
+  <div class="fb-table-wrap">
+    <table class="fb-table">
+      <thead><tr><th>{{ 'common.module' | translate }}</th><th>{{ 'managerFeedbacks.employee' | translate }}</th><th>{{ 'managerFeedbacks.dept' | translate }}</th><th>{{ 'managerFeedbacks.rating' | translate }}</th><th>{{ 'common.status' | translate }}</th><th>{{ 'managerFeedbacks.submittedDate' | translate }}</th><th class="text-right">{{ 'common.actions' | translate }}</th></tr></thead>
+      <tbody>
+        @if (loading) { <tr><td colspan="7" class="text-muted" style="padding:24px;text-align:center">{{ 'common.loading' | translate }}</td></tr> }
+        @if (!loading && page?.content?.length === 0) { <tr><td colspan="7"><div class="fb-empty"><div class="fb-empty-icon">📋</div><h3>{{ 'common.noResultsTitle' | translate }}</h3><p>{{ 'common.noResultsText' | translate }}</p></div></td></tr> }
+        @for (f of page?.content ?? []; track f.feedbackId) {
+          <tr>
+            <td class="fw-500">{{ f.moduleTitle }}</td>
+            <td>{{ f.employeeName }}</td>
+            <td class="text-muted">{{ f.department || '—' }}</td>
+            <td>@if (f.rating) { <span class="fb-badge fb-badge-rating">{{ f.rating }}/10</span> } @else { <span class="text-muted">—</span> }</td>
+            <td><span [class]="'fb-badge ' + (f.status==='SUBMITTED' ? 'fb-badge-submitted' : 'fb-badge-pending')">{{ (f.status==='SUBMITTED' ? 'common.submitted' : 'common.pending') | translate }}</span></td>
+            <td class="text-muted fb-text-sm">{{ f.submittedAt ? (f.submittedAt | date:'dd/MM/yyyy') : '—' }}</td>
+            <td><div class="actions justify-end">
+              <a [routerLink]="['/feedback', f.feedbackId]" class="fb-btn fb-btn-outline fb-btn-sm"><i class="bi bi-eye"></i></a>
+            </div></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if ((page?.totalPages ?? 0) > 1) {
+    <div class="fb-pagination">@for (p of pages; track p) { <button [class]="'fb-page-btn' + (p===currentPage ? ' active' : '')" (click)="goToPage(p)">{{ p + 1 }}</button> }</div>
+    <p class="text-muted fb-text-sm text-center">{{ 'common.showingEntries' | translate:{ size: page?.size, total: page?.totalElements } }}</p>
+  }
+</div>

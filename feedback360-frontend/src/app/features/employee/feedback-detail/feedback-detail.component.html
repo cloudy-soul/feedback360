@@ -1,0 +1,15 @@
+<div class="fb-page fb-page-medium">
+  @if (loading) { <div class="fb-empty"><h3>{{ 'common.loading' | translate }}</h3></div> }
+  @if (feedback) {
+    <div class="fb-detail-header">
+      <h2>{{ feedback.moduleTitle }}</h2>
+      <div class="fb-detail-meta">
+        <span><i class="bi bi-person"></i> {{ feedback.submittedBy }}</span>
+        <span><i class="bi bi-calendar-check"></i> {{ feedback.submittedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        <span><i class="bi bi-star-fill fb-star"></i> {{ feedback.rating }}/10</span>
+      </div>
+    </div>
+    <div class="fb-answer-card"><div class="fb-answer-question">{{ 'feedbackDetail.ratingLabel' | translate }}</div><div class="fb-answer-value">{{ feedback.rating }} / 10</div></div>
+    <div class="fb-answer-card"><div class="fb-answer-question">{{ 'feedbackDetail.commentLabel' | translate }}</div><div class="fb-answer-value">{{ feedback.comment }}</div></div>
+  }
+</div>

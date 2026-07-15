@@ -1,0 +1,50 @@
+{
+  "completions": [
+    {
+      "user": {
+        "id": 1,
+        "email": "nicole.bridge@example.com",
+        "fullName": "Nicole BRIDGE"
+      },
+      "module": {
+        "id": 192,
+        "name": "Angular Fundamentals",
+        "type": {
+          "id": 1,
+          "label": "Apprentissage_TU"
+        }
+      },
+      "parcours": {
+        "id": 11,
+        "name": "Talent Up"
+      },
+      "population": {
+        "id": 1,
+        "name": "Angular"
+      }
+    },
+    {
+      "user": {
+        "id": 2,
+        "email": "marc.dupont@example.com",
+        "fullName": "Marc DUPONT"
+      },
+      "module": {
+        "id": 205,
+        "name": "Spring Boot Essentials",
+        "type": {
+          "id": 1,
+          "label": "Apprentissage_TU"
+        }
+      },
+      "parcours": {
+        "id": 11,
+        "name": "Talent Up"
+      },
+      "population": {
+        "id": 2,
+        "name": "Java Backend"
+      }
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+<div class="fb-page">
+  <div class="fb-page-header">
+    <div><h1 class="fb-page-title">{{ 'myModules.title' | translate }}</h1><p class="fb-page-subtitle">{{ 'myModules.subtitle' | translate }}</p></div>
+  </div>
+  @if (loading) { <div class="fb-empty"><h3>{{ 'common.loading' | translate }}</h3></div> }
+  @if (!loading && allModules.length > 0) {
+    <div class="fb-filter-bar">
+      <div class="fb-filter-group"><label>{{ 'common.module' | translate }}</label><input [(ngModel)]="search" class="fb-input" [placeholder]="'myModules.searchPlaceholder' | translate"></div>
+      <div class="fb-filter-group"><label>{{ 'common.category' | translate }}</label>
+        <select [(ngModel)]="category" class="fb-select">
+          <option value="">{{ 'common.any' | translate }}</option>@for (c of categories; track c) { <option [value]="c">{{ c }}</option> }
+        </select>
+      </div>
+      <div class="fb-filter-group"><label>{{ 'common.status' | translate }}</label>
+        <select [(ngModel)]="status" class="fb-select">
+          <option value="">{{ 'common.any' | translate }}</option><option value="NOT_SUBMITTED">{{ 'common.pending' | translate }}</option><option value="SUBMITTED">{{ 'common.submitted' | translate }}</option>
+        </select>
+      </div>
+      <div class="fb-filter-actions">
+        <button class="fb-btn fb-btn-primary" (click)="applyFilter()"><i class="bi bi-funnel"></i> {{ 'common.filter' | translate }}</button>
+        <button class="fb-btn fb-btn-outline" (click)="clearFilter()">{{ 'common.clear' | translate }}</button>
+      </div>
+    </div>
+  }
+  @if (!loading && allModules.length === 0) {
+    <div class="fb-empty"><div class="fb-empty-icon">🎓</div><h3>{{ 'myModules.emptyTitle' | translate }}</h3><p>{{ 'myModules.emptyText' | translate }}</p></div>
+  }
+  @if (!loading && allModules.length > 0 && modules.length === 0) {
+    <div class="fb-empty"><div class="fb-empty-icon">📋</div><h3>{{ 'common.noResultsTitle' | translate }}</h3><p>{{ 'common.noResultsText' | translate }}</p></div>
+  }
+  @if (!loading && modules.length > 0) {
+    <div class="fb-table-wrap">
+      <table class="fb-table">
+        <thead><tr><th>{{ 'common.module' | translate }}</th><th>{{ 'common.category' | translate }}</th><th>{{ 'myModules.completed' | translate }}</th><th>{{ 'common.status' | translate }}</th><th class="text-right">{{ 'common.action' | translate }}</th></tr></thead>
+        <tbody>
+          @for (m of modules; track m.feedbackId) {
+            <tr>
+              <td class="fw-600">{{ m.moduleTitle }}</td>
+              <td class="text-muted">{{ m.moduleCategory || '—' }}</td>
+              <td class="text-muted">{{ m.completionDate | date:'dd/MM/yyyy' }}</td>
+              <td>
+                @if (m.status === 'SUBMITTED') { <span class="fb-badge fb-badge-submitted">✓ {{ 'common.submitted' | translate }}</span> }
+                @else { <span class="fb-badge fb-badge-pending">⏳ {{ 'common.pending' | translate }}</span> }
+              </td>
+              <td class="text-right">
+                @if (m.status !== 'SUBMITTED') {
+                  <a [routerLink]="['/feedback/submit']" [queryParams]="{moduleId: m.moduleId, moduleTitle: m.moduleTitle}" class="fb-btn fb-btn-primary fb-btn-sm">{{ 'myModules.giveFeedback' | translate }}</a>
+                } @else {
+                  <a [routerLink]="['/feedback', m.feedbackId]" class="fb-btn fb-btn-outline fb-btn-sm">{{ 'common.view' | translate }}</a>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
